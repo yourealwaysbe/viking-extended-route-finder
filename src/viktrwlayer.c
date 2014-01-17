@@ -4442,15 +4442,12 @@ void vik_trw_layer_filein_add_track ( VikTrwLayer *vtl, gchar *name, VikTrack *t
     vik_track_remove_dup_points ( tr ); /* make "double point" track work to undo */
     
     // enforce end of current track equal to start of tr
-    // but maintain that deleting to the first trackpoint is erase
-    if ( vik_track_get_tp_count ( vtl->current_track ) > 1 ) {
-        VikTrackpoint *cur_end = vik_track_get_tp_last ( vtl->current_track );
-        VikTrackpoint *new_start = vik_track_get_tp_first ( tr );
-        if ( ! vik_coord_equals ( &cur_end->coord, &new_start->coord ) ) {
-            vik_track_add_trackpoint ( vtl->current_track, 
-                                       vik_trackpoint_copy ( new_start ), 
-                                       FALSE );
-        }
+    VikTrackpoint *cur_end = vik_track_get_tp_last ( vtl->current_track );
+    VikTrackpoint *new_start = vik_track_get_tp_first ( tr );
+    if ( ! vik_coord_equals ( &cur_end->coord, &new_start->coord ) ) {
+        vik_track_add_trackpoint ( vtl->current_track, 
+                                   vik_trackpoint_copy ( cur_end ), 
+                                   FALSE );
     }
 
     vik_track_steal_and_append_trackpoints ( vtl->current_track, tr );
