@@ -390,7 +390,7 @@ static gpointer tool_new_waypoint_create ( VikWindow *vw, VikViewport *vvp);
 static gboolean tool_new_waypoint_click ( VikTrwLayer *vtl, GdkEventButton *event, VikViewport *vvp );
 static gpointer tool_extended_route_finder_create ( VikWindow *vw, VikViewport *vvp);
 static gboolean tool_extended_route_finder_click ( VikTrwLayer *vtl, GdkEventButton *event, VikViewport *vvp );
-static gboolean tool_extended_route_finder_key_press ( VikTrwLayer *vtl, GdkEventKey *event, VikViewport *vvp ); 
+static gboolean tool_extended_route_finder_key_press ( VikTrwLayer *vtl, GdkEventKey *event, VikViewport *vvp );
 
 static void cached_pixbuf_free ( CachedPixbuf *cp );
 static gint cached_pixbuf_cmp ( CachedPixbuf *cp, const gchar *name );
@@ -439,10 +439,10 @@ static VikToolInterface trw_layer_tools[] = {
 
   { { "ExtendedRouteFinder", "vik-icon-Route Finder", N_("Route _Finder"), "<control><shift>F", N_("Create Route with Route Finder"), 0 },
     (VikToolConstructorFunc) tool_extended_route_finder_create,  NULL, NULL, NULL,
-    (VikToolMouseFunc) tool_extended_route_finder_click, 
+    (VikToolMouseFunc) tool_extended_route_finder_click,
     (VikToolMouseMoveFunc) tool_new_track_move, // -\#
     (VikToolMouseFunc) tool_new_track_release,  //   -> Reuse these track methods on a route
-    (VikToolKeyFunc) tool_extended_route_finder_key_press, 
+    (VikToolKeyFunc) tool_extended_route_finder_key_press,
     FALSE,
     GDK_CURSOR_IS_PIXMAP, &cursor_route_finder_pixbuf, NULL },
 
@@ -4440,13 +4440,13 @@ void vik_trw_layer_filein_add_track ( VikTrwLayer *vtl, gchar *name, VikTrack *t
 {
   if ( vtl->route_finder_append && vtl->current_track ) {
     vik_track_remove_dup_points ( tr ); /* make "double point" track work to undo */
-    
+
     // enforce end of current track equal to start of tr
     VikTrackpoint *cur_end = vik_track_get_tp_last ( vtl->current_track );
     VikTrackpoint *new_start = vik_track_get_tp_first ( tr );
     if ( ! vik_coord_equals ( &cur_end->coord, &new_start->coord ) ) {
-        vik_track_add_trackpoint ( vtl->current_track, 
-                                   vik_trackpoint_copy ( cur_end ), 
+        vik_track_add_trackpoint ( vtl->current_track,
+                                   vik_trackpoint_copy ( cur_end ),
                                    FALSE );
     }
 
@@ -9706,7 +9706,7 @@ static gboolean tool_new_route_click ( VikTrwLayer *vtl, GdkEventButton *event, 
   vtl->route_finder_started = FALSE;
 
   // -------------------------- if current is a track - switch to new route,
-  if ( event->button == 1 && ( ! vtl->current_track || 
+  if ( event->button == 1 && ( ! vtl->current_track ||
                                (vtl->current_track && !vtl->current_track->is_route ) ) )
   {
     gchar *name = trw_layer_new_unique_sublayer_name(vtl, VIK_TRW_LAYER_SUBLAYER_ROUTE, _("Route"));
@@ -9923,7 +9923,7 @@ static void tool_extended_route_finder_undo ( VikTrwLayer *vtl ) {
   if ( new_end ) {
     g_free ( new_end );
     vik_layer_emit_update ( VIK_LAYER(vtl) );
-    
+
     /* remove last ' to:...' */
     if ( vtl->current_track->comment ) {
       gchar *last_to = strrchr ( vtl->current_track->comment, 't' );
@@ -9949,7 +9949,7 @@ static gboolean tool_extended_route_finder_click ( VikTrwLayer *vtl, GdkEventBut
   else if ( vtl->route_finder_started && vtl->current_track && ! vik_track_get_tp_first ( vtl->current_track ) ) {
     return tool_new_track_or_route_click ( vtl, event, vvp );
   }
-  else if ( ( vtl->current_track && vtl->current_track->is_route ) || 
+  else if ( ( vtl->current_track && vtl->current_track->is_route ) ||
             ( event->state & GDK_CONTROL_MASK && vtl->current_track ) ) {
     struct LatLon start, end;
 

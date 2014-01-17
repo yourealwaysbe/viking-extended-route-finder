@@ -1,14 +1,4 @@
 
-NOTE
-----
-
-This is a fork of the Viking program with a new experimental feature.  Details
-of the main branch follow
-
-
-ORIGINAL README
----------------
-
 Viking is a free/open source program to manage GPS data. You can
 import, plot and create tracks and waypoints, show OSM, Terraserver
 and other maps, see real-time GPS position, get geocaches, control
