@@ -9960,7 +9960,35 @@ static gboolean tool_extended_route_finder_click ( VikTrwLayer *vtl, GdkEventBut
     vtl->route_finder_started = TRUE;
     vtl->route_finder_append = TRUE;  // merge tracks. keep started true.
 
-    vik_routing_default_find ( vtl, start, end );
+    // update UI to let user know what's going on
+    vik_window_set_busy_cursor ( VIK_WINDOW(VIK_GTK_WINDOW_FROM_LAYER(vtl)) );
+    VikStatusbar *sb = vik_window_get_statusbar (VIK_WINDOW(VIK_GTK_WINDOW_FROM_LAYER(vtl))); 
+    VikRoutingEngine *engine = vik_routing_default_engine ( );
+    if ( ! engine ) {
+        vik_statusbar_set_message ( sb, VIK_STATUSBAR_INFO, "Cannot plan route without a default routing engine." );
+        return TRUE;
+    }
+    gchar *msg = g_strdup_printf ( _("Querying %s for route between (%.3f, %.3f) and (%.3f, %.3f)."), 
+                                   vik_routing_engine_get_label ( engine ), 
+                                   start.lat, start.lon, end.lat, end.lon );
+    vik_statusbar_set_message ( sb, VIK_STATUSBAR_INFO, msg );
+    g_free ( msg );
+
+    /* Give GTK a change to display the new status bar before querying the web */
+    while ( gtk_events_pending ( ) )
+        gtk_main_iteration ( );
+
+    int find_status = vik_routing_default_find ( vtl, start, end );
+
+    /* Update UI to say we're done */
+    vik_window_clear_busy_cursor ( VIK_WINDOW(VIK_GTK_WINDOW_FROM_LAYER(vtl)) );
+    msg = ( find_status == 0 ) ? g_strdup_printf ( _("%s returned route between (%.3f, %.3f) and (%.3f, %.3f)."), 
+                                 vik_routing_engine_get_label ( engine ), 
+                                 start.lat, start.lon, end.lat, end.lon )
+                               : g_strdup_printf ( _("Error getting route from %s."), 
+                                                  vik_routing_engine_get_label ( engine ) );
+    vik_statusbar_set_message ( sb, VIK_STATUSBAR_INFO, msg );
+    g_free ( msg );
 
     vik_layer_emit_update ( VIK_LAYER(vtl) );
   } else {
