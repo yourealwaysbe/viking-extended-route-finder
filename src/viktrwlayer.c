@@ -437,7 +437,7 @@ static VikToolInterface trw_layer_tools[] = {
     TRUE, // Still need to handle clicks when in PAN mode to disable the potential trackpoint drawing
     GDK_CURSOR_IS_PIXMAP, &cursor_new_route_pixbuf, NULL },
 
-  { { "ExtendedRouteFinder", "vik-icon-Route Finder", N_("Route _Finder"), "<control><shift>F", N_("Create Route with Route Finder"), 0 },
+  { { "ExtendedRouteFinder", "vik-icon-Route Finder", N_("Route _Finder"), "<control><shift>F", N_("Route Finder"), 0 },
     (VikToolConstructorFunc) tool_extended_route_finder_create,  NULL, NULL, NULL,
     (VikToolMouseFunc) tool_extended_route_finder_click,
     (VikToolMouseMoveFunc) tool_new_track_move, // -\#
