@@ -9946,6 +9946,10 @@ static gboolean tool_extended_route_finder_click ( VikTrwLayer *vtl, GdkEventBut
   if ( event->button == 3 && vtl->current_track ) {
     tool_extended_route_finder_undo ( vtl );
   }
+  else if ( event->button == 2 ) {
+     vtl->draw_sync_do = FALSE;
+     return FALSE;
+  }
   // if we started the track but via undo deleted all the track points, begin again
   else if ( vtl->current_track && vtl->current_track->is_route && ! vik_track_get_tp_first ( vtl->current_track ) ) {
     return tool_new_track_or_route_click ( vtl, event, vvp );
