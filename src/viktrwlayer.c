@@ -443,7 +443,7 @@ static VikToolInterface trw_layer_tools[] = {
     (VikToolMouseMoveFunc) tool_new_track_move, // -\#
     (VikToolMouseFunc) tool_new_track_release,  //   -> Reuse these track methods on a route
     (VikToolKeyFunc) tool_extended_route_finder_key_press,
-    FALSE,
+    TRUE, // Still need to handle clicks when in PAN mode to disable the potential trackpoint drawing
     GDK_CURSOR_IS_PIXMAP, &cursor_route_finder_pixbuf, NULL },
 
   { { "EditWaypoint", "vik-icon-Edit Waypoint", N_("_Edit Waypoint"), "<control><shift>E", N_("Edit Waypoint"), 0 },
